@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-// Serves the site the release script staged (src-tauri/target/release-site) on localhost with the
-// headers deploy/releases/nginx.conf sends, to look at the pages before uploading them.
-// Read-only, local only.
+// Serves the built site (dist/, after `pnpm build`) on localhost with the headers
+// deploy/nginx.conf sends, to look at the pages as the server will serve them. Read-only, local
+// only.
 //
-//   node scripts/serve-site.mjs [port]
+//   node scripts/serve.mjs [port]
 
 import { createReadStream, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const site = fileURLToPath(new URL("../src-tauri/target/release-site/", import.meta.url));
+const site = fileURLToPath(new URL("../dist/", import.meta.url));
 const port = Number(process.argv[2] ?? 4173);
 
 const types = {

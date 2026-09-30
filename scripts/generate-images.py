@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the site's images in site/assets/ and their sizes in site/images.json:
+"""Generates the site's images in assets/ and their sizes in images.json:
 
 - the screenshots, cut from 2x captures of the app's Windows window (2880x1800 for a 1440x900
   window) with the crops the pages show, at the width each is shown and twice that (never wider
@@ -7,13 +7,14 @@
   the one a 390-wide screen shows;
 - the 1200x630 Open Graph image (og.png): the icon and the wordmark, the headline and a crop of
   the review screenshot, on --bg-app;
-- the icons: icon.svg (design/brand/begitra-icon.svg), favicon.ico and apple-touch-icon.png (180)
-  from the app's icons in src-tauri/icons/.
+- the icons: icon.svg (the app's design/brand/begitra-icon.svg), favicon.ico and
+  apple-touch-icon.png (180) from the app's icons in src-tauri/icons/.
 
 Needs Pillow (with AVIF), fontTools and brotli (for Geist's woff2):
 pip install pillow fonttools brotli. Run from the repository root with the folder that holds the
-captures, each found by the end of its file name (shot-review-1440.png, a prefix allowed):
-python scripts/generate-site-images.py <captures>
+captures, each found by the end of its file name (shot-review-1440.png, a prefix allowed), and
+the app's checkout, which holds the icons and the brand mark:
+python scripts/generate-images.py <captures> <app checkout>
 """
 
 import json
@@ -26,8 +27,7 @@ from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
-ICONS = ROOT / "src-tauri" / "icons"
-SITE = ROOT / "site"
+SITE = ROOT
 OUT = SITE / "assets"
 FONTS = ROOT / "node_modules" / "@fontsource-variable" / "geist" / "files"
 
@@ -72,11 +72,19 @@ def geist(size: int, weight: int) -> ImageFont.FreeTypeFont:
 
 def captures() -> Path:
     """The folder of captures named on the command line."""
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: python scripts/generate-site-images.py <captures>")
+    if len(sys.argv) != 3:
+        raise SystemExit("usage: python scripts/generate-images.py <captures> <app checkout>")
     folder = Path(sys.argv[1]).resolve()
     if not folder.is_dir():
         raise SystemExit(f"not a folder: {folder}")
+    return folder
+
+
+def app() -> Path:
+    """The app's checkout named on the command line, which holds the icons and the brand mark."""
+    folder = Path(sys.argv[2]).resolve()
+    if not (folder / "src-tauri" / "icons" / "icon.png").is_file():
+        raise SystemExit(f"not a checkout of the app: {folder}")
     return folder
 
 
@@ -139,7 +147,7 @@ def open_graph(folder: Path) -> None:
     frame.paste(crop, (1, 1))
     card.paste(rounded(frame, 12), (560, 118), rounded(frame, 12))
     # The icon and the wordmark.
-    icon = Image.open(ICONS / "icon.png").convert("RGBA").resize((48, 48), Image.Resampling.LANCZOS)
+    icon = Image.open(app() / "src-tauri" / "icons" / "icon.png").convert("RGBA").resize((48, 48), Image.Resampling.LANCZOS)
     card.paste(icon, (64, 64), icon)
     mark = geist(34, 600)
     x = 64 + 48 + 16
@@ -157,9 +165,9 @@ def open_graph(folder: Path) -> None:
 
 
 def icons() -> None:
-    shutil.copyfile(ROOT / "design" / "brand" / "begitra-icon.svg", OUT / "icon.svg")
-    shutil.copyfile(ICONS / "icon.ico", OUT / "favicon.ico")
-    touch = Image.open(ICONS / "icon.png").convert("RGBA").resize((180, 180), Image.Resampling.LANCZOS)
+    shutil.copyfile(app() / "design" / "brand" / "begitra-icon.svg", OUT / "icon.svg")
+    shutil.copyfile(app() / "src-tauri" / "icons" / "icon.ico", OUT / "favicon.ico")
+    touch = Image.open(app() / "src-tauri" / "icons" / "icon.png").convert("RGBA").resize((180, 180), Image.Resampling.LANCZOS)
     touch.save(OUT / "apple-touch-icon.png", optimize=True)
 
 
