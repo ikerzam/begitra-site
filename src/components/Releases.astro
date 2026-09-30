@@ -1,0 +1,39 @@
+---
+// What's new: the release and the two before it, with their notes.
+import type { PageContext } from "../lib/context";
+import { formatDate } from "../lib/format";
+import Label from "./Label.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const r = ctx.s.releases;
+---
+
+<section class="feature two-columns" id="whats-new">
+  <div class="wrap">
+    <div class="copy">
+      <Label icon="sparkles" text={r.label} />
+      <h2>{r.title}</h2>
+      <p>{r.body}</p>
+    </div>
+    <ol class="releases">
+      {
+        ctx.recent.map((entry) => (
+          <li>
+            <p class="release-side">
+              <strong>{entry.version}</strong>
+              <time datetime={entry.date}>{formatDate(entry.date, ctx.locale)}</time>
+            </p>
+            <div>
+              <h3>{entry.title[ctx.lang]}</h3>
+              <p>{entry.notes[ctx.lang]}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

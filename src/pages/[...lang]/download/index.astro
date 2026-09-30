@@ -1,0 +1,22 @@
+---
+// The download page, in English under the site's root and in each other language under its code.
+import DownloadMain from "../../../components/DownloadMain.astro";
+import OlderVersions from "../../../components/OlderVersions.astro";
+import Page from "../../../layouts/Page.astro";
+import { pageContext } from "../../../lib/context";
+import { format } from "../../../lib/format";
+import { langOf, languagePaths } from "../../../lib/site";
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const ctx = pageContext(langOf(Astro.params.lang), "download");
+const { meta } = ctx.s;
+const description = format(meta.downloadDescription, { version: ctx.version });
+---
+
+<Page ctx={ctx} title={meta.downloadTitle} description={description}>
+  <DownloadMain ctx={ctx} />
+  <OlderVersions ctx={ctx} />
+</Page>

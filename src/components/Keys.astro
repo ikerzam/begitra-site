@@ -1,0 +1,22 @@
+---
+// A row of keyboard shortcuts: the keys of each, then what they do.
+interface Props {
+  /** Each shortcut's keys and what they do: `[["j", "k"], "files"]`. */
+  groups: [string[], string][];
+}
+
+const { groups } = Astro.props;
+---
+
+<ul class="keys">
+  {
+    groups.map(([letters, text]) => (
+      <li>
+        {letters.map((letter) => (
+          <kbd>{letter}</kbd>
+        ))}
+        <span>{text}</span>
+      </li>
+    ))
+  }
+</ul>

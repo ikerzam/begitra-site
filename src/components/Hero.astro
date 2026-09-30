@@ -1,0 +1,55 @@
+---
+// The product page's first screen: the pill with the minor release's news, the headline, the
+// download button, the facts and the screenshot of review mode.
+import type { PageContext } from "../lib/context";
+import { format } from "../lib/format";
+import { releaseHref } from "../lib/site";
+import Icon from "./Icon.astro";
+import Picture from "./Picture.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const h = ctx.s.hero;
+// The pill shows the newest `x.y.0` release up to this one, so a patch keeps its minor's news.
+const highlight =
+  ctx.releases
+    .slice(ctx.releases.indexOf(ctx.release))
+    .find((entry) => /\.0$/.test(entry.version)) ?? ctx.release;
+const minor = highlight.version.split(".").slice(0, 2).join(".");
+---
+
+<section class="hero">
+  <div class="wrap">
+    <a class="pill" href="#whats-new">
+      <strong>{format(h.pillLabel, { version: minor })}</strong>
+      <span class="pill-long">{highlight.highlight?.[ctx.lang] ?? highlight.title[ctx.lang]}</span>
+      <span class="pill-short">{highlight.title[ctx.lang]}</span>
+      <Icon name="arrow-right" size={14} />
+    </a>
+    <h1>{h.headline}</h1>
+    <p class="lede">{h.sub}</p>
+    <div class="cta">
+      <a class="btn btn-large" href={releaseHref(ctx.version, ctx.nsis.name)}>
+        <Icon name="download" size={18} />
+        {h.download}
+      </a>
+      <a class="btn btn-large btn-outline" href="#whats-new">{h.whatsNew}</a>
+    </div>
+    <ul class="facts">
+      {h.facts.map((fact) => <li>{format(fact, { version: ctx.version })}</li>)}
+    </ul>
+    <div class="stage">
+      <div class="shot app-dark">
+        <Picture
+          name="hero"
+          alt={h.imageAlt}
+          eager
+          sizes="(max-width: 1200px) calc(100vw - 40px), 1152px"
+        />
+      </div>
+    </div>
+  </div>
+</section>

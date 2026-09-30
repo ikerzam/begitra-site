@@ -1,0 +1,20 @@
+---
+// One question that opens to its answer, which the default slot holds.
+import Icon from "./Icon.astro";
+
+interface Props {
+  question: string;
+  open?: boolean;
+}
+
+const { question, open = false } = Astro.props;
+---
+
+<details open={open}>
+  <summary>
+    <span>{question}</span>
+    <Icon name="plus" size={18} class="closed" />
+    <Icon name="minus" size={18} class="opened" />
+  </summary>
+  <p><slot /></p>
+</details>

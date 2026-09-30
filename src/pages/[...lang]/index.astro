@@ -1,0 +1,30 @@
+---
+// The product page, in English at the site's root and in each other language under its code.
+import Closing from "../../components/Closing.astro";
+import Everyday from "../../components/Everyday.astro";
+import Features from "../../components/Features.astro";
+import Hero from "../../components/Hero.astro";
+import Performance from "../../components/Performance.astro";
+import Questions from "../../components/Questions.astro";
+import Releases from "../../components/Releases.astro";
+import Page from "../../layouts/Page.astro";
+import { pageContext } from "../../lib/context";
+import { langOf, languagePaths } from "../../lib/site";
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const ctx = pageContext(langOf(Astro.params.lang), "product");
+const { meta } = ctx.s;
+---
+
+<Page ctx={ctx} title={meta.productTitle} description={meta.productDescription}>
+  <Hero ctx={ctx} />
+  <Features ctx={ctx} />
+  <Performance ctx={ctx} />
+  <Everyday ctx={ctx} />
+  <Releases ctx={ctx} />
+  <Closing ctx={ctx} />
+  <Questions ctx={ctx} />
+</Page>

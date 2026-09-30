@@ -1,0 +1,17 @@
+# Git hooks. The `prepare` script installs them on `pnpm install`.
+
+pre-commit:
+  commands:
+    format:
+      glob: "*.{ts,js,mjs,json,css,md,yml}"
+      run: pnpm exec prettier --check {staged_files}
+
+pre-push:
+  commands:
+    tests:
+      run: pnpm test
+
+commit-msg:
+  commands:
+    conventional:
+      run: node scripts/check-commit-message.mjs {1}

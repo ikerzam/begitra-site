@@ -1,0 +1,66 @@
+---
+// The footer of every page: the wordmark and tagline, the links to the product's sections, the
+// downloads and the languages, the copyright and the updater's key id.
+import { site, strings, type PageContext } from "../lib/context";
+import { format } from "../lib/format";
+import { LANGUAGES, pageHref, releaseHref } from "../lib/site";
+import DonateLink from "./DonateLink.astro";
+import Wordmark from "./Wordmark.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const f = ctx.s.footer;
+const n = ctx.s.nav;
+const copyright = format(f.copyright, { year: ctx.year, publisher: site.publisher });
+---
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="brand">
+        <a class="wordmark" href={pageHref(ctx.lang, "product")} aria-label={n.home}>
+          <Wordmark size={24} />
+        </a>
+        <p>{f.tagline}</p>
+        <DonateLink class="btn btn-small btn-outline donate" label={n.donate} />
+      </div>
+      <nav class="links" aria-label={f.product}>
+        <h2>{f.product}</h2>
+        <a href={pageHref(ctx.lang, "product", "#features")}>{n.features}</a>
+        <a href={pageHref(ctx.lang, "product", "#whats-new")}>{n.whatsNew}</a>
+        <a href={pageHref(ctx.lang, "product", "#questions")}>{n.questions}</a>
+      </nav>
+      <nav class="links" aria-label={f.downloads}>
+        <h2>{f.downloads}</h2>
+        <a href={releaseHref(ctx.version, ctx.nsis.name)}>{f.installer}</a>
+        <a href={pageHref(ctx.lang, "download", "#files")}>
+          <span class="long">{f.checksums}</span>
+          <span class="short">{f.checksumsShort}</span>
+        </a>
+        <a href={pageHref(ctx.lang, "download", "#older")}>{f.older}</a>
+      </nav>
+      <nav class="links languages" aria-label={f.language}>
+        <h2>{f.language}</h2>
+        {
+          LANGUAGES.map((lang) => (
+            <a
+              href={pageHref(lang, ctx.page)}
+              hreflang={lang}
+              lang={lang}
+              aria-current={lang === ctx.lang ? "page" : undefined}
+            >
+              {strings[lang].name}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>{copyright} · <a href="/licenses.txt">{f.licenses}</a></p>
+      <p class="key">{f.key} <code>{ctx.key.id}</code></p>
+    </div>
+  </div>
+</footer>

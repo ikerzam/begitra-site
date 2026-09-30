@@ -1,0 +1,169 @@
+---
+// The download page: the installer and the MSI, the files with their sizes, checksums and
+// signatures, how to check them, Windows' warning, the requirements, and what happens after
+// installing.
+import type { Installer } from "virtual:site-data";
+
+import { asset } from "../lib/assets";
+import { site, type PageContext } from "../lib/context";
+import { format, megabytes } from "../lib/format";
+import { releaseHref } from "../lib/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const d = ctx.s.download;
+const size = (installer: Installer) => megabytes(installer.size, ctx.locale);
+const nsisSize = format(d.size, { size: size(ctx.nsis) });
+const [fileColumn, sizeColumn, hashColumn, signatureColumn] = d.columns;
+const [updatesTitle, updatesBody] = d.after.updates;
+const [uninstallTitle, uninstallBody] = d.after.uninstall;
+const [dataTitle, dataBody, logsLabel] = d.after.data;
+---
+
+<section class="download-head">
+  <div class="wrap">
+    <h1>{d.title}</h1>
+    <p>{format(d.sub, { version: ctx.version, date: ctx.date })}</p>
+  </div>
+</section>
+<div class="download-main">
+  <div class="wrap">
+    <div class="download-left">
+      <section class="primary" aria-labelledby="platform-title">
+        <div class="platform">
+          <img src={asset("icon.svg")} alt="" width="40" height="40" />
+          <div>
+            <h2 id="platform-title">{d.platform}</h2>
+            <p>{d.platformSub}</p>
+          </div>
+        </div>
+        <div class="primary-action">
+          <a class="btn btn-large" href={releaseHref(ctx.version, ctx.nsis.name)}>
+            <Icon name="download" size={18} />
+            {d.button}
+          </a>
+          <span>{nsisSize}</span>
+        </div>
+        <p class="note"><span class="size-inline">{nsisSize}. </span>{d.note}</p>
+        <p class="msi">
+          <Icon name="package" />
+          <a href={releaseHref(ctx.version, ctx.msi.name)}>{d.msi}</a>
+          <span>{format(d.msiHint, { size: size(ctx.msi) })}</span>
+        </p>
+      </section>
+      <section class="files" id="files" aria-labelledby="files-title">
+        <h2 id="files-title">{d.files}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{fileColumn}</th>
+              <th scope="col">{sizeColumn}</th>
+              <th scope="col">{hashColumn}</th>
+              <th scope="col">{signatureColumn}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              [ctx.nsis, ctx.msi].map((installer) => (
+                <tr>
+                  <td class="file">
+                    <a href={releaseHref(ctx.version, installer.name)}>{installer.name}</a>
+                  </td>
+                  <td class="size" data-label={sizeColumn}>{size(installer)}</td>
+                  <td class="hash" data-label={hashColumn}><code>{installer.sha256}</code></td>
+                  <td class="signature" data-label={signatureColumn}>
+                    <a
+                      href={releaseHref(ctx.version, `${installer.name}.minisig`)}
+                      aria-label={format(d.signatureOf, { file: installer.name })}
+                    >
+                      .minisig
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+      <section class="check" aria-labelledby="check-title">
+        <h2 id="check-title">{d.checkTitle}</h2>
+        <p>{d.checkHash}</p>
+        <pre><code>Get-FileHash .\{ctx.nsis.name}</code></pre>
+        <p>{d.checkSignature}</p>
+        <pre><code>minisign -Vm {ctx.nsis.name} -P {ctx.key.key}</code></pre>
+        <p class="key">{d.keyLabel} <code>{ctx.key.id}</code></p>
+      </section>
+    </div>
+    <div class="download-right">
+      <section class="aside-card warning" aria-labelledby="warning-title">
+        <h2 id="warning-title"><Icon name="shield-alert" class="warn" />{d.warning.title}</h2>
+        <p>{d.warning.body}</p>
+        <ol class="steps">
+          {
+            d.warning.steps.map((step, i) => (
+              <li>
+                <span class="number">{i + 1}</span>
+                {step}
+              </li>
+            ))
+          }
+        </ol>
+        <p>{d.warning.foot}</p>
+      </section>
+      <section class="requirements" aria-labelledby="requirements-title">
+        <h2 id="requirements-title">{d.requirements.title}</h2>
+        <ul>
+          {
+            d.requirements.items.map((item) => (
+              <li>
+                <Icon name="check" size={14} />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+      {
+        site.donate && (
+          <section class="aside-card support" aria-labelledby="support-title">
+            <h2 id="support-title">
+              <Icon name="heart" class="heart" />
+              {d.support.title}
+            </h2>
+            <p>{d.support.body}</p>
+            <a class="btn btn-medium btn-outline donate" href={site.donate} rel="noopener">
+              <Icon name="heart" class="heart" />
+              {d.support.button}
+            </a>
+          </section>
+        )
+      }
+    </div>
+  </div>
+</div>
+<section class="after" aria-labelledby="after-title">
+  <div class="wrap">
+    <h2 id="after-title">{d.after.title}</h2>
+    <div class="after-grid">
+      <div>
+        <h3><Icon name="refresh-cw" />{updatesTitle}</h3>
+        <p>{updatesBody}</p>
+      </div>
+      <div>
+        <h3><Icon name="trash" />{uninstallTitle}</h3>
+        <p>{uninstallBody}</p>
+      </div>
+      <div>
+        <h3><Icon name="hard-drive" />{dataTitle}</h3>
+        <p>{dataBody}</p>
+        <p><code>%APPDATA%\dev.begitra.app</code></p>
+        <p>{logsLabel}</p>
+        <p><code>%LOCALAPPDATA%\dev.begitra.app\logs</code></p>
+      </div>
+    </div>
+  </div>
+</section>

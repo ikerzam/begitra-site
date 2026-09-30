@@ -1,0 +1,15 @@
+# Node
+node_modules/
+dist/
+.astro/
+
+# The facts of a release the build describes, written by whatever cuts the release
+.release.json
+
+# OS and editors
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json

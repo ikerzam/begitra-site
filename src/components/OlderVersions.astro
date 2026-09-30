@@ -1,0 +1,43 @@
+---
+// Every release before this one, with the links to its two installers; nothing for the first.
+import type { PageContext } from "../lib/context";
+import { formatDate } from "../lib/format";
+import { releaseHref } from "../lib/site";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const o = ctx.s.download.older;
+---
+
+{
+  ctx.older.length > 0 && (
+    <section class="older" id="older" aria-labelledby="older-title">
+      <div class="wrap">
+        <div class="older-head">
+          <h2 id="older-title">{o.title}</h2>
+          <p>{o.body}</p>
+        </div>
+        <ol>
+          {ctx.older.map((entry) => (
+            <li>
+              <strong>{entry.version}</strong>
+              <time datetime={entry.date}>{formatDate(entry.date, ctx.locale)}</time>
+              <span class="title">{entry.title[ctx.lang]}</span>
+              <span class="older-links">
+                <a href={releaseHref(entry.version, `Begitra_${entry.version}_x64-setup.exe`)}>
+                  {o.exe}
+                </a>
+                <a href={releaseHref(entry.version, `Begitra_${entry.version}_x64_en-US.msi`)}>
+                  {o.msi}
+                </a>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}

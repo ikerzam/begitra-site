@@ -1,0 +1,113 @@
+---
+// The Everyday Git cards: the command palette, folders of repositories, the commit box, branches,
+// and what goes online.
+import type { PageContext } from "../lib/context";
+import Card from "./Card.astro";
+import Icon from "./Icon.astro";
+import Label from "./Label.astro";
+import Picture from "./Picture.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const e = ctx.s.everyday;
+// The lane colours of the design's folder list, one per repository.
+const LANES = [1, 4, 3, 2];
+const lastRepo = e.folder.repos.length - 1;
+// The first two rows are what Begitra does online; the rest are what it never does.
+const ONLINE_ROWS = 2;
+---
+
+<section class="feature everyday">
+  <div class="wrap">
+    <div class="copy head-narrow">
+      <Label icon="git-branch" text={e.label} />
+      <h2>{e.title}</h2>
+    </div>
+    <div class="cards">
+      <div class="cards-top">
+        <Card class="card-palette" icon="command" title={e.palette.title} body={e.palette.body}>
+          <div class="card-shot app-dark">
+            <Picture
+              name="palette"
+              alt={e.palette.imageAlt}
+              sizes="(max-width: 1080px) calc(100vw - 72px), 724px"
+              narrow="palette-narrow"
+              narrowSizes="calc(100vw - 61px)"
+            />
+          </div>
+        </Card>
+        <Card
+          class="card-folder"
+          icon="folders"
+          title={e.folder.title}
+          body={e.folder.body}
+          badge={e.folder.badge}
+        >
+          <div class="mini app-dark">
+            <p class="mini-head">
+              <Icon name="folder" size={14} />
+              <code>~/code/geoportal</code>
+              <span>{e.folder.count}</span>
+            </p>
+            <ul>
+              {
+                e.folder.repos.map(([name, branch, state], i) => (
+                  <li class={i === lastRepo ? "quiet" : undefined}>
+                    <span class={`dot lane-${LANES[i % LANES.length]}`} />
+                    <span class="name">{name}</span>
+                    <span class="branch">{branch}</span>
+                    <span class="state">{state}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </Card>
+      </div>
+      <div class="cards-bottom">
+        <Card
+          class="card-commit"
+          icon="git-commit-horizontal"
+          title={e.commit.title}
+          body={e.commit.body}
+        >
+          <div class="card-shot app-dark">
+            <Picture name="commit" alt={e.commit.imageAlt} sizes="312px" />
+          </div>
+        </Card>
+        <Card class="card-branches" icon="git-merge" title={e.branches.title} body={e.branches.body}>
+          <div class="card-shot app-dark">
+            <Picture name="branches" alt={e.branches.imageAlt} sizes="312px" />
+          </div>
+        </Card>
+        <Card class="card-privacy" icon="shield-check" title={e.privacy.title} body={e.privacy.body}>
+          <div class="mini app-dark">
+            <p class="mini-head"><span>{e.privacy.head}</span></p>
+            <ul>
+              {
+                e.privacy.rows.map(([what, when], i) =>
+                  i < ONLINE_ROWS ? (
+                    <li class="">
+                      <Icon name="check" size={14} />
+                      <span class="name">{what}</span>
+                      <span class="state">{when}</span>
+                    </li>
+                  ) : (
+                    <li class="quiet">
+                      <Icon name="minus" size={14} />
+                      <span class="name">{what}</span>
+                      <span class="state">{when}</span>
+                    </li>
+                  ),
+                )
+              }
+            </ul>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>

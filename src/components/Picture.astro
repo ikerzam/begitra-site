@@ -1,0 +1,52 @@
+---
+// A screenshot as AVIF and WebP at each width it is cut at, with its narrow crop on small screens
+// when it has one.
+import { asset, imageOf } from "../lib/assets";
+
+interface Props {
+  name: string;
+  alt: string;
+  /** The `sizes` of the wide crop. */
+  sizes: string;
+  /** Loads at once and first, for the image above the fold. */
+  eager?: boolean;
+  /** The crop small screens show, and its `sizes`. */
+  narrow?: string;
+  narrowSizes?: string;
+}
+
+const { name, alt, sizes, eager = false, narrow, narrowSizes } = Astro.props;
+const FORMATS = ["avif", "webp"];
+const image = imageOf(name);
+const small = narrow === undefined ? undefined : { name: narrow, image: imageOf(narrow) };
+const srcset = (crop: string, ext: string) =>
+  imageOf(crop)
+    .widths.map((width) => `${asset(`${crop}-${width}.${ext}`)} ${width}w`)
+    .join(", ");
+---
+
+<picture>
+  {
+    small &&
+      FORMATS.map((ext) => (
+        <source
+          media="(max-width: 600px)"
+          type={`image/${ext}`}
+          srcset={srcset(small.name, ext)}
+          sizes={narrowSizes}
+          width={small.image.width}
+          height={small.image.height}
+        />
+      ))
+  }
+  {FORMATS.map((ext) => <source type={`image/${ext}`} srcset={srcset(name, ext)} sizes={sizes} />)}
+  <img
+    src={asset(`${name}-${image.width}.webp`)}
+    width={image.width}
+    height={image.height}
+    alt={alt}
+    loading={eager ? "eager" : "lazy"}
+    fetchpriority={eager ? "high" : undefined}
+    decoding="async"
+  />
+</picture>

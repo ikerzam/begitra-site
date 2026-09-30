@@ -1,0 +1,36 @@
+# Weekly updates, minor and patch grouped into one pull request per ecosystem; an Astro major is a
+# decision Iker makes himself. The actions are pinned by commit, so this is what keeps them fresh.
+# The seven-day cooldown proposes only versions a week old: most bad releases are pulled within days.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      site:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "chore(ci)"

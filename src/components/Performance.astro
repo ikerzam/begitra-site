@@ -1,0 +1,35 @@
+---
+// The benchmark figures on the Linux kernel.
+import type { PageContext } from "../lib/context";
+import Label from "./Label.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const p = ctx.s.performance;
+---
+
+<section class="feature wide performance">
+  <div class="wrap">
+    <div class="head">
+      <div class="copy">
+        <Label icon="gauge" text={p.label} />
+        <h2>{p.title}</h2>
+      </div>
+      <p>{p.body}</p>
+    </div>
+    <dl class="stats">
+      {
+        p.stats.map(([value, text]) => (
+          <div>
+            <dt>{value}</dt>
+            <dd>{text}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="note">{p.note}</p>
+  </div>
+</section>

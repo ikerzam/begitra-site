@@ -1,0 +1,47 @@
+---
+// The questions, the first one open: whether Begitra is free, with the Donate link when
+// site.json names one.
+import { site, type PageContext } from "../lib/context";
+import Question from "./Question.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const q = ctx.s.questions;
+const [freeQuestion, freeAnswer, [before, donate, after]] = q.free as [
+  string,
+  string,
+  [string, string, string],
+];
+const items = q.items as [string, string][];
+---
+
+<section class="feature two-columns" id="questions">
+  <div class="wrap">
+    <div class="copy">
+      <h2>{q.title}</h2>
+    </div>
+    <div class="questions">
+      <Question question={freeQuestion} open>
+        {freeAnswer}
+        {
+          site.donate && (
+            <>
+              {" "}
+              {before}
+              <a href={site.donate} rel="noopener">{donate}</a>
+              {after}
+            </>
+          )
+        }
+      </Question>
+      {
+        items.map(([question, answer]) => (
+          <Question question={question}>{answer}</Question>
+        ))
+      }
+    </div>
+  </div>
+</section>

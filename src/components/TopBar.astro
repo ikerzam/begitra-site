@@ -1,0 +1,41 @@
+---
+// The bar at the top of every page: the wordmark, the product page's sections, the other
+// language, and the Donate and Download buttons.
+import { strings, type PageContext } from "../lib/context";
+import { LANGUAGES, pageHref } from "../lib/site";
+import DonateLink from "./DonateLink.astro";
+import Wordmark from "./Wordmark.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const n = ctx.s.nav;
+const others = LANGUAGES.filter((lang) => lang !== ctx.lang);
+---
+
+<header class="top">
+  <div class="wrap">
+    <a class="wordmark" href={pageHref(ctx.lang, "product")} aria-label={n.home}>
+      <Wordmark size={28} />
+    </a>
+    <nav aria-label={n.label}>
+      <a href={pageHref(ctx.lang, "product", "#features")}>{n.features}</a>
+      <a href={pageHref(ctx.lang, "product", "#whats-new")}>{n.whatsNew}</a>
+      <a href={pageHref(ctx.lang, "product", "#questions")}>{n.questions}</a>
+    </nav>
+    {
+      others.map((lang) => (
+        <a class="lang" href={pageHref(lang, ctx.page)} hreflang={lang} lang={lang}>
+          <span class="long">{strings[lang].name}</span>
+          <span class="short" aria-hidden="true">{lang.toUpperCase()}</span>
+        </a>
+      ))
+    }
+    <div class="actions">
+      <DonateLink class="btn btn-small btn-outline donate" label={n.donate} />
+      <a class="btn btn-small" href={pageHref(ctx.lang, "download")}>{n.download}</a>
+    </div>
+  </div>
+</header>

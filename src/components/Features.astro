@@ -1,0 +1,91 @@
+---
+// The three feature sections: review mode, the worktrees table, and compare and merge preview.
+import type { PageContext } from "../lib/context";
+import Icon from "./Icon.astro";
+import Keys from "./Keys.astro";
+import Label from "./Label.astro";
+import Picture from "./Picture.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const { review: r, worktrees: w, compare: c } = ctx.s;
+const POINT_ICONS = ["check-check", "notebook-pen", "chart-no-axes-column", "fold-vertical"];
+const points = r.points.map((text, i) => {
+  const icon = POINT_ICONS[i];
+  if (icon === undefined) throw new Error(`review point ${i + 1} has no icon`);
+  return { icon, text };
+});
+const detailSizes = "(max-width: 1080px) calc(100vw - 48px), 688px";
+const narrowSizes = "calc(100vw - 40px)";
+---
+
+<section class="feature split" id="features">
+  <div class="wrap">
+    <div class="copy">
+      <Label icon="eye" text={r.label} />
+      <h2>{r.title}</h2>
+      <p>{r.body}</p>
+      <ul class="points">
+        {
+          points.map(({ icon, text }) => (
+            <li>
+              <Icon name={icon} size={18} />
+              <span>{text}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <Keys groups={r.keys as [string[], string][]} />
+    </div>
+    <div class="shot detail fade-left fade-bottom app-dark">
+      <Picture
+        name="review"
+        alt={r.imageAlt}
+        sizes={detailSizes}
+        narrow="review-narrow"
+        narrowSizes={narrowSizes}
+      />
+    </div>
+  </div>
+</section>
+<section class="feature wide">
+  <div class="wrap">
+    <div class="head">
+      <div class="copy">
+        <Label icon="folder-git-2" text={w.label} />
+        <h2>{w.title}</h2>
+      </div>
+      <p>{w.body}</p>
+    </div>
+    <div class="shot strip fade-right-narrow app-dark">
+      <Picture
+        name="worktrees"
+        alt={w.imageAlt}
+        sizes="(max-width: 1200px) calc(100vw - 48px), 1152px"
+        narrow="worktrees-narrow"
+        narrowSizes={narrowSizes}
+      />
+    </div>
+  </div>
+</section>
+<section class="feature split flip">
+  <div class="wrap">
+    <div class="shot detail fade-right fade-bottom app-dark">
+      <Picture
+        name="compare"
+        alt={c.imageAlt}
+        sizes={detailSizes}
+        narrow="compare-narrow"
+        narrowSizes={narrowSizes}
+      />
+    </div>
+    <div class="copy">
+      <Label icon="git-compare-arrows" text={c.label} />
+      <h2>{c.title}</h2>
+      <p>{c.body}</p>
+    </div>
+  </div>
+</section>

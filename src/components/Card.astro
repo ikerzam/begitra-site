@@ -1,0 +1,27 @@
+---
+// A card of the Everyday Git grid: an icon, an optional badge, a title and a body, then the
+// visual in the default slot.
+import Icon from "./Icon.astro";
+
+interface Props {
+  class: string;
+  icon: string;
+  title: string;
+  body: string;
+  badge?: string;
+}
+
+const { class: className, icon, title, body, badge } = Astro.props;
+---
+
+<article class={`card ${className}`}>
+  <div class="card-copy">
+    <p class="card-top">
+      <Icon name={icon} size={20} />
+      {badge && <span class="badge">{badge}</span>}
+    </p>
+    <h3>{title}</h3>
+    <p>{body}</p>
+  </div>
+  <slot />
+</article>

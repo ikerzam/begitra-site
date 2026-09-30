@@ -1,0 +1,21 @@
+---
+// The Donate button, drawn only when site.json says where donations go.
+import { site } from "../lib/context";
+import Icon from "./Icon.astro";
+
+interface Props {
+  class: string;
+  label: string;
+}
+
+const { class: className, label } = Astro.props;
+---
+
+{
+  site.donate && (
+    <a class={className} href={site.donate} rel="noopener">
+      <Icon name="heart" size={14} class="heart" />
+      <span class="label">{label}</span>
+    </a>
+  )
+}

@@ -1,0 +1,13 @@
+---
+// The small label over a section's title: an icon and a few words.
+import Icon from "./Icon.astro";
+
+interface Props {
+  icon: string;
+  text: string;
+}
+
+const { icon, text } = Astro.props;
+---
+
+<p class="label"><Icon name={icon} />{text}</p>

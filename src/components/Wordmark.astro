@@ -1,0 +1,13 @@
+---
+// Begitra's icon and name, with "git" in the accent colour.
+import { asset } from "../lib/assets";
+
+interface Props {
+  size: number;
+}
+
+const { size } = Astro.props;
+---
+
+<img src={asset("icon.svg")} alt="" width={size} height={size} />
+<span>Be<span class="git">git</span>ra</span>

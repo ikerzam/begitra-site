@@ -1,0 +1,36 @@
+---
+// The product page's last call to download, with the release's version, size and date.
+import { asset } from "../lib/assets";
+import type { PageContext } from "../lib/context";
+import { format, megabytes } from "../lib/format";
+import { pageHref, releaseHref } from "../lib/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+  ctx: PageContext;
+}
+
+const { ctx } = Astro.props;
+const c = ctx.s.closing;
+const facts = { version: ctx.version, size: megabytes(ctx.nsis.size, ctx.locale), date: ctx.date };
+---
+
+<section class="feature closing">
+  <div class="wrap">
+    <div class="panel">
+      <img src={asset("icon.svg")} alt="" width="72" height="72" />
+      <h2>{c.title}</h2>
+      <p>{c.sub}</p>
+      <div class="cta">
+        <a class="btn btn-large" href={releaseHref(ctx.version, ctx.nsis.name)}>
+          <Icon name="download" size={18} />
+          {c.download}
+        </a>
+        <a class="btn btn-large btn-outline" href={pageHref(ctx.lang, "download")}>{c.checksums}</a>
+      </div>
+      <ul class="facts">
+        {c.meta.map((part) => <li>{format(part, facts)}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
