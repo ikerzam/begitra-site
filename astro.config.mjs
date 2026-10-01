@@ -13,11 +13,14 @@ import { defineConfig } from "astro/config";
 const here = fileURLToPath(new URL(".", import.meta.url));
 
 /**
- * The release the pages describe: `BEGITRA_SITE_FACTS` names the file a release writes; without
- * it, a fixed sample lets the pages be seen with `astro dev`.
+ * The release the pages describe: `BEGITRA_SITE_FACTS` names a release's `site-facts.json`;
+ * without it, a fixed sample lets the pages be seen with `astro dev`.
  */
 const factsPath = process.env.BEGITRA_SITE_FACTS || join(here, "src", "sample-release.json");
 const facts = JSON.parse(readFileSync(factsPath, "utf8"));
+
+/** The site's own settings: its address, the repository whose releases it describes. */
+const site = JSON.parse(readFileSync(join(here, "site.json"), "utf8"));
 
 /** The Lucide icons the pages draw inline. */
 const ICONS = [
@@ -114,7 +117,7 @@ function siteData() {
 }
 
 export default defineConfig({
-  site: facts.base,
+  site: site.base,
   output: "static",
   trailingSlash: "always",
   devToolbar: { enabled: false },

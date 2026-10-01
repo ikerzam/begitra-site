@@ -13,8 +13,6 @@ declare module "virtual:site-data" {
   /** The release the pages describe. */
   export interface Facts {
     version: string;
-    /** The site's absolute URL, with a trailing slash. */
-    base: string;
     /** The updater's public key as minisign takes it (`-P`), and its key id. */
     key: { key: string; id: string };
     installers: Installer[];

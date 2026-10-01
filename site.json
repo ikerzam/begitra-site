@@ -1,4 +1,6 @@
 {
+  "base": "https://begitra.ikerzam.tech/",
+  "repository": "ikerzam/begitra",
   "publisher": "Iker Z.",
   "donate": null
 }

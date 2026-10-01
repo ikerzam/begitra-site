@@ -1,8 +1,9 @@
 // The site's languages and pages, and the links between them. Links inside the site are
 // root-absolute (`/es/download/`); the URLs other sites read (canonical, `hreflang`, Open Graph,
-// the sitemap) are absolute, from the release's base URL.
+// the sitemap) are absolute, from the site's address in `site.json`. A release's files are on its
+// GitHub release.
 
-import data from "virtual:site-data";
+import siteJson from "../../site.json";
 
 /** The site's languages; the first is served at the root and is `x-default`. */
 export const LANGUAGES = ["en", "es"] as const;
@@ -24,14 +25,22 @@ export function pageHref(lang: Lang, page: PageName, hash = ""): string {
   return `/${pagePath(lang, page)}${hash}`;
 }
 
-/** A page's absolute URL: `https://begitra.ikerzam.tech/es/download/`. */
-export function pageUrl(lang: Lang, page: PageName): string {
-  return new URL(pagePath(lang, page), data.facts.base).toString();
+/** The absolute URL of a path of the site: `https://begitra.ikerzam.tech/sitemap.xml`. */
+export function siteUrl(path: string): string {
+  return new URL(path, siteJson.base).toString();
 }
 
-/** A link to a file of a release: `/releases/v0.6.5/Begitra_0.6.5_x64-setup.exe`. */
+/** A page's absolute URL: `https://begitra.ikerzam.tech/es/download/`. */
+export function pageUrl(lang: Lang, page: PageName): string {
+  return siteUrl(pagePath(lang, page));
+}
+
+/**
+ * A file of a release, on its GitHub release:
+ * `https://github.com/ikerzam/begitra/releases/download/v0.6.5/Begitra_0.6.5_x64-setup.exe`.
+ */
 export function releaseHref(version: string, name: string): string {
-  return `/releases/v${version}/${name}`;
+  return `https://github.com/${siteJson.repository}/releases/download/v${version}/${name}`;
 }
 
 /** Each language's `lang` parameter for `getStaticPaths`: none for the first, its code for the rest. */

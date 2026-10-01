@@ -17,6 +17,11 @@ const facts = readJson("src/sample-release.json") as {
   key: { key: string; id: string };
   installers: { kind: string; name: string; sha256: string }[];
 };
+const site = readJson("site.json") as { base: string; repository: string; donate: string | null };
+const releases = readJson("releases.json") as { version: string }[];
+/** Where a release's files are: its GitHub release. */
+const files = (version: string) =>
+  `https://github.com/${site.repository}/releases/download/v${version}/`;
 const pages = ["index.html", "download/index.html", "es/index.html", "es/download/index.html"];
 
 beforeAll(async () => {
@@ -55,10 +60,24 @@ describe("the built site", () => {
     }
   });
 
-  it("downloads the version's installer from the product page, in each language", () => {
+  it("downloads the version's installer from its GitHub release, in each language", () => {
     const nsis = facts.installers.find((installer) => installer.kind === "nsis");
     for (const path of ["index.html", "es/index.html"]) {
-      expect(read(path)).toContain(`href="/releases/v${facts.version}/${nsis?.name}"`);
+      expect(read(path)).toContain(`href="${files(facts.version)}${nsis?.name}"`);
+    }
+  });
+
+  it("links each older version's two installers on its GitHub release", () => {
+    const older = releases.slice(
+      releases.findIndex((entry) => entry.version === facts.version) + 1,
+    );
+    expect(older.length).toBeGreaterThan(0);
+    for (const path of ["download/index.html", "es/download/index.html"]) {
+      const html = read(path);
+      for (const { version } of older) {
+        expect(html).toContain(`href="${files(version)}Begitra_${version}_x64-setup.exe"`);
+        expect(html).toContain(`href="${files(version)}Begitra_${version}_x64_en-US.msi"`);
+      }
     }
   });
 
@@ -67,7 +86,7 @@ describe("the built site", () => {
       const html = read(path);
       for (const installer of facts.installers) {
         expect(html).toContain(installer.sha256);
-        expect(html).toContain(`href="/releases/v${facts.version}/${installer.name}.minisig"`);
+        expect(html).toContain(`href="${files(facts.version)}${installer.name}.minisig"`);
       }
       expect(html).toContain(`-P ${facts.key.key}`);
       expect(html).toContain(facts.key.id);
@@ -84,17 +103,21 @@ describe("the built site", () => {
   });
 
   it("shows a Donate link only when site.json names a donation page", () => {
-    const { donate } = readJson("site.json") as { donate: string | null };
+    const { donate } = site;
     for (const path of pages) {
       if (donate) expect(read(path)).toContain(`href="${donate}"`);
       else expect(read(path)).not.toMatch(/class="[^"]*\bdonate\b/);
     }
   });
 
-  it("lists the four pages in the sitemap", () => {
+  it("lists the four pages in the sitemap, at the site's address", () => {
     const sitemap = read("sitemap.xml");
     for (const path of ["", "download/", "es/", "es/download/"]) {
-      expect(sitemap).toContain(`<loc>https://begitra.ikerzam.tech/${path}</loc>`);
+      expect(sitemap).toContain(`<loc>${site.base}${path}</loc>`);
     }
+    expect(read("robots.txt")).toContain(`Sitemap: ${site.base}sitemap.xml`);
+    expect(read("index.html")).toMatch(
+      new RegExp(`<meta property="og:image" content="${site.base}assets/og\\.[\\w-]+\\.png"`),
+    );
   });
 });

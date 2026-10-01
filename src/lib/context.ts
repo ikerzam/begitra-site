@@ -27,8 +27,12 @@ export interface Release {
 export const strings: Record<Lang, Strings> = { en, es };
 export const releases: Release[] = releasesJson;
 
-/** `site.json`: who publishes Begitra, and where donations go (`null` hides every Donate link). */
-export const site: { publisher: string; donate: string | null } = siteJson;
+/**
+ * `site.json`: the site's address, the repository whose releases it describes, who publishes
+ * Begitra, and where donations go (`null` hides every Donate link).
+ */
+export const site: { base: string; repository: string; publisher: string; donate: string | null } =
+  siteJson;
 
 /** The entry of `version` in `releases.json`; throws when the version has none. */
 export function releaseOf(version: string): Release {

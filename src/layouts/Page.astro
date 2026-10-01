@@ -4,13 +4,11 @@
 // sections in the default slot, and the footer.
 import "../../site.css";
 
-import data from "virtual:site-data";
-
 import Footer from "../components/Footer.astro";
 import TopBar from "../components/TopBar.astro";
 import { asset, fontUrl } from "../lib/assets";
 import { strings, type PageContext } from "../lib/context";
-import { LANGUAGES, pageUrl } from "../lib/site";
+import { LANGUAGES, pageUrl, siteUrl } from "../lib/site";
 
 interface Props {
   ctx: PageContext;
@@ -20,7 +18,7 @@ interface Props {
 
 const { ctx, title, description } = Astro.props;
 const url = pageUrl(ctx.lang, ctx.page);
-const ogImage = new URL(asset("og.png"), data.facts.base).toString();
+const ogImage = siteUrl(asset("og.png"));
 const otherLanguages = LANGUAGES.filter((lang) => lang !== ctx.lang);
 ---
 
