@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.12.0",
+    "date": "2026-10-07",
+    "title": {
+      "en": "Tabs, a floating sidebar and a quicker graph",
+      "es": "Pestañas, un panel lateral flotante y un grafo más ágil"
+    },
+    "highlight": {
+      "en": "Comparisons open in tabs beside the project's graph, and the graph walks the branches matching a pattern, hides the remote branches and goes back to HEAD with one key",
+      "es": "Las comparaciones se abren en pestañas junto al grafo del proyecto, y el grafo recorre las ramas que coinciden con un patrón, oculta las ramas remotas y vuelve a HEAD con una tecla"
+    },
+    "notes": {
+      "en": "The sidebar is a rail of icons on every screen while a project is open, and none on Home: an icon opens its section as a panel that floats over the screen, which keeps its width, and Escape or a click outside closes it. Comparisons open in tabs of their own beside the project's view: going to the graph and back keeps them, Ctrl+Tab and Ctrl+Shift+Tab move between tabs, Ctrl+W closes one, and each project remembers its tabs. In the graph, the scope's “Branches matching…” takes a pattern such as claude/* and walks the branches it matches, local and remote, counting them as you type; a button hides the remote branches no local branch tracks, and the setting stays across launches; Go to HEAD (h on the rows, or its button) selects HEAD's commit and centres it, loading the history it needs; a branch and its upstream on the same commit share one badge; a double click on a branch's badge checks it out, and a Ctrl-click on a row compares it with the selected commit in a new tab. Repositories with thousands of tracked branches list them much faster.",
+      "es": "El panel lateral es una columna de iconos en todas las pantallas mientras hay un proyecto abierto, y ninguna en Inicio: un icono abre su sección como un panel que flota sobre la pantalla, que conserva su ancho, y Escape o un clic fuera lo cierran. Las comparaciones se abren en pestañas propias junto a la vista del proyecto: ir al grafo y volver las conserva, Ctrl+Tab y Ctrl+Mayús+Tab pasan de una pestaña a otra, Ctrl+W cierra una, y cada proyecto recuerda sus pestañas. En el grafo, «Ramas que coinciden…» del alcance acepta un patrón como claude/* y recorre las ramas que encajan, locales y remotas, contándolas mientras escribes; un botón oculta las ramas remotas que ninguna rama local sigue, y el ajuste se mantiene entre arranques; Ir a HEAD (h en las filas, o su botón) selecciona el commit de HEAD y lo centra, cargando el historial que haga falta; una rama y su upstream en el mismo commit comparten una insignia; un doble clic en la insignia de una rama hace checkout de ella, y Ctrl+clic en una fila la compara con el commit seleccionado en una pestaña nueva. Los repositorios con miles de ramas con upstream las listan mucho más rápido."
+    }
+  },
+  {
     "version": "0.11.0",
     "date": "2026-10-07",
     "title": {
