@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.11.0",
+    "date": "2026-10-07",
+    "title": {
+      "en": "Fetch, pull and push in one click",
+      "es": "Fetch, pull y push con un clic"
+    },
+    "highlight": {
+      "en": "Fetch, Pull and Push sit in the top bar beside the project switcher, and the commit box offers Push once there is something to push",
+      "es": "Fetch, Pull y Push están en la barra superior, junto al selector de proyecto, y la caja de commit ofrece Push cuando hay algo que subir"
+    },
+    "notes": {
+      "en": "The top bar shows Fetch, Pull and Push for the repository the graph shows, Pull and Push with how many commits they would bring or send. Fetch fetches every remote and says when it last did; Pull only moves the branch forward, and a branch that diverged from its upstream opens the pull dialog instead of being merged or rebased behind your back; Push sends the branch to its upstream, or publishes a branch that has none. A button that cannot act says why in its tooltip, and a branch whose upstream was deleted on the remote is never pushed back in one click. Ctrl+Shift+F fetches and Ctrl+Shift+L pulls; Ctrl+Shift+P still opens the push dialog, since it is VS Code's command palette key. The commit box no longer has \"Push after commit\": a commit never pushes by itself, and once the branch has commits to push the box shows Push (or Publish) beside Commit; Ctrl+Shift+Enter still commits and pushes in one step.",
+      "es": "La barra superior muestra Fetch, Pull y Push para el repositorio que enseña el grafo; Pull y Push indican cuántos commits traerían o subirían. Fetch trae de todos los remotos y dice cuándo lo hizo por última vez; Pull solo hace avanzar la rama, y una rama que ha divergido de su upstream abre el diálogo de pull en vez de hacer un merge o un rebase sin preguntar; Push sube la rama a su upstream o publica la que no lo tiene. Un botón que no puede actuar dice por qué en su tooltip, y una rama cuyo upstream se borró en el remoto nunca se vuelve a subir con un clic. Ctrl+Mayús+F hace fetch y Ctrl+Mayús+L pull; Ctrl+Mayús+P sigue abriendo el diálogo de push, porque es la tecla de la paleta de comandos de VS Code. La caja de commit ya no tiene «Push después del commit»: un commit nunca sube nada por sí solo, y cuando la rama tiene commits por subir la caja muestra Push (o Publicar) junto a Commit; Ctrl+Mayús+Intro sigue haciendo commit y push de una vez."
+    }
+  },
+  {
     "version": "0.10.0",
     "date": "2026-10-07",
     "title": {
