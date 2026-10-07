@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.10.0",
+    "date": "2026-10-07",
+    "title": {
+      "en": "Clean up after the agents",
+      "es": "Limpia lo que dejan los agentes"
+    },
+    "highlight": {
+      "en": "One confirmation deletes the branches merged pull requests leave behind, squash merges included, with their worktrees",
+      "es": "Una sola confirmación borra las ramas que dejan las pull requests fusionadas, también las de squash, con sus worktrees"
+    },
+    "notes": {
+      "en": "Clean up branches (the brush in the Branches header, or the palette) lists the local branches merged into main or gone from their remote, squash and rebase merges included, each with why, and deletes the ones you tick with their worktrees in one confirmation; its toast keeps the commands that bring each branch back. A gone branch with changes main lacks, or one the check could not answer in time, is listed unticked with a warning, and a branch an agent moved since the listing stays. Since 0.6.5 the sidebar is one column of foldable sections (Repositories, Branches, Remote branches, Tags, Worktrees) under one filter; Undo commit on the graph's HEAD row and in the palette moves HEAD back, with Redo; the commit box can push after the commit, and Ctrl+Shift+Enter commits and pushes once; a conflicted file can be taken whole from one side, with Undo; Ctrl+F finds in the changes under review; File history in a file's menus shows the graph filtered by it; a branch's menu adds a worktree for it or opens the one that holds it, and removing a worktree can delete its branch too. File rows show an icon of the file's kind and the name before its folder, many text controls became icons named by their tooltips, and a dialog opened from a menu keeps the keyboard's focus.",
+      "es": "Limpiar ramas (la escoba de la cabecera de Ramas, o la paleta) lista las ramas locales fusionadas en main o que ya no están en su remoto, también las de squash y rebase, cada una con su motivo, y borra las que marcas con sus worktrees en una sola confirmación; su aviso guarda los comandos que devuelven cada rama. Una rama que ya no está en su remoto con cambios que main no tiene, o una que la comprobación no pudo responder a tiempo, sale sin marcar y con un aviso, y una rama que un agente movió después del listado se queda. Desde 0.6.5 la barra lateral es una columna de secciones plegables (Repositorios, Ramas, Ramas remotas, Etiquetas, Worktrees) bajo un solo filtro; Deshacer commit en la fila de HEAD del grafo y en la paleta devuelve HEAD atrás, con Rehacer; la caja de commit puede hacer push después del commit, y Ctrl+Mayús+Intro hace commit y push una vez; un fichero en conflicto se puede tomar entero de un lado, con Deshacer; Ctrl+F busca en los cambios que revisas; Historial del fichero en los menús de un fichero muestra el grafo filtrado por él; el menú de una rama le añade un worktree o abre el que la tiene, y quitar un worktree puede borrar también su rama. Las filas de ficheros muestran un icono de su tipo y el nombre antes de su carpeta, muchos controles de texto pasaron a iconos con su nombre en el tooltip, y un diálogo abierto desde un menú conserva el foco del teclado."
+    }
+  },
+  {
     "version": "0.6.5",
     "date": "2026-09-30",
     "title": {
